@@ -1,3 +1,5 @@
+# menu.py
+
 # Dependencies
 import pygame
 
@@ -57,4 +59,14 @@ def show_menu(screen):
     screen.blit(options_text, (options_button.x + (options_button.width - options_text_width) // 2,
                                options_button.y + (options_button.height - options_text_height) // 2))
 
-    pygame.display.flip()
+    # Check for events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            return None
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                if one_player_button.collidepoint(mouse_pos):
+                    return 'one_player' # Identifier for one player game
+
+    pygame.display.update()

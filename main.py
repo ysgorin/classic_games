@@ -1,5 +1,7 @@
+# main.py
 import pygame
 from menu import show_menu
+from game import one_player_game
 
 # Initialize pygame
 pygame.init()
@@ -13,7 +15,9 @@ def main():
     run = True
     while run:
         # Show the menu screen
-        show_menu(screen)
+        menu_result = show_menu(screen)
+        if menu_result == 'one_player':
+            one_player_game(screen)
 
         # Event handling
         for event in pygame.event.get():
