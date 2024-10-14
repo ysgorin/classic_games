@@ -55,6 +55,8 @@ def display_message(screen, message):
     pygame.time.wait(3000)
 
 def one_player_game(screen):
+    print("Starting one player game")
+
     # Load background image
     background = pygame.image.load('assets/images/ttt_background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
@@ -63,6 +65,10 @@ def one_player_game(screen):
     board = [['' for _ in range(3)] for _ in range(3)]
     game_over = False
     winner = None
+
+    # Draw the initial game state
+    draw_board(screen,board,background)
+    pygame.display.update()
 
     while not game_over:
         for event in pygame.event.get():
@@ -85,7 +91,8 @@ def one_player_game(screen):
                             if winner:
                                 game_over = True
 
-    draw_board(screen,board,background)
+        draw_board(screen,board,background)
+        pygame.display.update()
 
     # Handle game over
     if winner:
