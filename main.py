@@ -16,13 +16,10 @@ def main():
     while run:
         # Show the menu screen
         menu_result = show_menu(screen)
+        if menu_result == 'quit':
+            run = False
         if menu_result == 'one_player':
             one_player_game(screen)
-
-        # Event handling
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
 
         # Update the display
         pygame.display.update()

@@ -63,12 +63,10 @@ def show_menu(screen):
         # Check for events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                return None
+                return 'quit'
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if one_player_button.collidepoint(mouse_pos):
-                        print("One player button clicked")
                         return 'one_player' # Identifier for one player game
                     elif two_player_button.collidepoint(mouse_pos):
                         return 'two_player' # Identifier for two player game

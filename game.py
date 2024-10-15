@@ -3,27 +3,45 @@
 # Dependencies
 import pygame
 import random
+import time
+import tkinter as tk
+from tkinter import messagebox
+
+pygame.init()
+
+# Constants for screen size and grid
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+GRID_SIZE = 600  # Size of the grid area (square)
+CELL_SIZE = GRID_SIZE // 3  # Size of each cell (200x200)
 
 def draw_board(screen, board, background):
     # Draw the background image
     screen.blit(background, (0, 0))
 
-    # Draw the grid lines
-    # Vertical Lines
-    pygame.draw.line(screen, (255, 255, 255), (200, 0), (200, 600), 5)
-    pygame.draw.line(screen, (255, 255, 255), (400, 0), (400, 600), 5)
-    # Horizontal Lines
-    pygame.draw.line(screen, (255, 255, 255), (0, 200), (600, 200), 5)
-    pygame.draw.line(screen, (255, 255, 255), (0, 400), (600, 400), 5)
+    # Calculate grid offset to center it on the screen
+    x_offset = (SCREEN_WIDTH - GRID_SIZE) // 2
+    y_offset = (SCREEN_HEIGHT - GRID_SIZE) // 2
 
-    # Draw the X and O characters
+    # Draw vertical grid lines
+    pygame.draw.line(screen, (255, 255, 255), (x_offset + CELL_SIZE, y_offset), (x_offset + CELL_SIZE, y_offset + GRID_SIZE), 5)
+    pygame.draw.line(screen, (255, 255, 255), (x_offset + 2 * CELL_SIZE, y_offset), (x_offset + 2 * CELL_SIZE, y_offset + GRID_SIZE), 5)
+
+    # Draw horizontal grid lines
+    pygame.draw.line(screen, (255, 255, 255), (x_offset, y_offset + CELL_SIZE), (x_offset + GRID_SIZE, y_offset + CELL_SIZE), 5)
+    pygame.draw.line(screen, (255, 255, 255), (x_offset, y_offset + 2 * CELL_SIZE), (x_offset + GRID_SIZE, y_offset + 2 * CELL_SIZE), 5)
+
+    # Initialize the font here (to avoid early initialization issues)
+    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 80)
+
+    # Draw X and O characters using the font
     for row in range(3):
         for col in range(3):
-            if board[row][col] == 'X':
-                pygame.draw.line(screen, (255, 255, 255), (col * 200 + 50, row * 200 + 50), (col * 200 + 150, row * 200 + 150), 5)
-                pygame.draw.line(screen, (255, 255, 255), (col * 200 + 50, row * 200 + 150), (col * 200 + 150, row * 200 + 50), 5)
-            elif board[row][col] == 'O':
-                pygame.draw.circle(screen, (255, 255, 255), (col * 200 + 100, row * 200 + 100), 50, 5)
+            if board[row][col] != '':
+                text = font.render(board[row][col], True, (255, 255, 255))
+                text_rect = text.get_rect(center=(x_offset + col * CELL_SIZE + CELL_SIZE // 2,
+                                                  y_offset + row * CELL_SIZE + CELL_SIZE // 2))
+                screen.blit(text, text_rect)
 
 def check_winner(board):
     # Check rows, columns, and diagonals for a winner
@@ -45,18 +63,16 @@ def cpu_move(board):
         row, col = random.choice(empty_cells)
         board[row][col] = 'O'
 
-def display_message(screen, message):
-    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 40)
-    text = font.render(message, True, (255, 255, 255))
-    text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2)) 
-    screen.blit(text, text_rect)
-    pygame.display.flip()
+def display_message(message):
+    root = tk.Tk()
+    # Hide the main tkinter window
+    root.withdraw()
+    messagebox.showinfo('Game Over', message)
+    root.destroy()
 
     pygame.time.wait(3000)
 
 def one_player_game(screen):
-    print("Starting one player game")
-
     # Load background image
     background = pygame.image.load('assets/images/ttt_background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
@@ -73,19 +89,23 @@ def one_player_game(screen):
     while not game_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
                 return
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: # Left mouse button
+                if event.button == 1:  # Left mouse button
                     mouse_pos = pygame.mouse.get_pos()
-                    row = mouse_pos[1] // 200
-                    col = mouse_pos[0] // 200
-                    if board[row][col] == '':
+                    x_offset = (SCREEN_WIDTH - GRID_SIZE) // 2
+                    y_offset = (SCREEN_HEIGHT - GRID_SIZE) // 2
+                    row = (mouse_pos[1] - y_offset) // CELL_SIZE
+                    col = (mouse_pos[0] - x_offset) // CELL_SIZE
+                    if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == '':
                         board[row][col] = 'X'
+                        draw_board(screen,board,background)
+                        pygame.display.update()
                         winner = check_winner(board)
                         if winner or all(cell != '' for row in board for cell in row):
                             game_over = True
                         else:
+                            time.sleep(1)
                             cpu_move(board)
                             winner = check_winner(board)
                             if winner:
@@ -100,7 +120,7 @@ def one_player_game(screen):
     else:
         message = "Game Over! It's a draw!"
 
-    display_message(screen, message)
+    display_message(message)
     pygame.display.update()
 
 pygame.quit()
