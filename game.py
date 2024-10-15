@@ -78,7 +78,7 @@ def display_message(screen, message):
     pygame.display.flip()
     time.sleep(2)
 
-def one_player_game(screen, player_symbol):
+def one_player_game(screen, player_symbol, first_turn):
     cpu_symbol = 'O' if player_symbol == 'X' else 'X'
 
     # Load background image
@@ -93,6 +93,12 @@ def one_player_game(screen, player_symbol):
     # Draw the initial game state
     draw_board(screen,board,background)
     pygame.display.update()
+
+    # If computer goes first, make the initial move
+    if first_turn == 'computer':
+        cpu_move(board, cpu_symbol)
+        draw_board(screen, board, background)
+        pygame.display.update()
 
     while not game_over:
         for event in pygame.event.get():

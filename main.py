@@ -1,7 +1,8 @@
 # main.py
 import pygame
+import random
 from menu import show_menu, choose_symbol
-from game import one_player_game
+from game import one_player_game, display_message
 
 # Initialize pygame
 pygame.init()
@@ -28,7 +29,14 @@ def main():
         if menu_result == 'one_player':
             player_symbol = choose_symbol(screen)
             if player_symbol in ['X', 'O']:
-                game = one_player_game(screen, player_symbol)
+                # Randomly choose who goes first
+                first_turn = random.choice(['player', 'computer'])
+                
+                # Show message to indicate turn
+                message = "You're first!" if first_turn == 'player' else "Computer's first!"
+                display_message(screen, message)
+
+                game = one_player_game(screen, player_symbol, first_turn)
                 if game == None:
                     run = False
             elif player_symbol == None:
