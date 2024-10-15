@@ -13,6 +13,8 @@ SCREEN_HEIGHT = 600
 GRID_SIZE = 600  # Size of the grid area (square)
 CELL_SIZE = GRID_SIZE // 3  # Size of each cell (200x200)
 
+sound_effect = pygame.mixer.Sound('assets/audio/MA_SoundCreator_Pen_Clicks_1.wav')
+
 def draw_board(screen, board, background):
     # Draw the background image
     screen.blit(background, (0, 0))
@@ -97,6 +99,7 @@ def one_player_game(screen, player_symbol, first_turn):
     # If computer goes first, make the initial move
     if first_turn == 'computer':
         cpu_move(board, cpu_symbol)
+        sound_effect.play()
         draw_board(screen, board, background)
         pygame.display.update()
 
@@ -113,6 +116,7 @@ def one_player_game(screen, player_symbol, first_turn):
                     col = (mouse_pos[0] - x_offset) // CELL_SIZE
                     if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == '':
                         board[row][col] = player_symbol
+                        sound_effect.play()
                         draw_board(screen,board,background)
                         pygame.display.update()
                         winner = check_winner(board)
@@ -121,6 +125,7 @@ def one_player_game(screen, player_symbol, first_turn):
                         else:
                             time.sleep(1)
                             cpu_move(board, cpu_symbol)
+                            sound_effect.play()
                             winner = check_winner(board)
                             if winner:
                                 game_over = True
