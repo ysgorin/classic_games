@@ -65,7 +65,7 @@ def cpu_move(board, cpu_symbol):
 
 def display_message(screen, message):
     # Load background image
-    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.image.load('assets/images/background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
     
     # Draw the background image
@@ -84,7 +84,7 @@ def one_player_game(screen, player_symbol, first_turn):
     cpu_symbol = 'O' if player_symbol == 'X' else 'X'
 
     # Load background image
-    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.image.load('assets/images/background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
 
     # Initialize the game board

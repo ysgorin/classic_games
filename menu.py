@@ -3,9 +3,14 @@
 # Dependencies
 import pygame
 
+# Color Constants
+WHITE = (255, 255, 255)
+BLUE = (0, 128, 255)
+LIGHT_BLUE = (173, 216, 230)
+
 def show_menu(screen):
     # Load background image
-    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.image.load('assets/images/background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
 
     # Load a font and render the title
@@ -77,7 +82,7 @@ def show_menu(screen):
 
 def choose_symbol(screen):
     # Load background image
-    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.image.load('assets/images/background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
     
     button_font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 40)
