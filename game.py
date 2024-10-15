@@ -136,5 +136,6 @@ def one_player_game(screen, player_symbol, first_turn):
     time.sleep(1)
     display_message(screen, message)
     pygame.display.update()
+    return 'game over'
 
 pygame.quit()
