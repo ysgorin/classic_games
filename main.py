@@ -8,10 +8,6 @@ from game import one_player_game, display_message
 pygame.init()
 pygame.mixer.init()
 
-# Load and play background music
-pygame.mixer.music.load('assets/audio/background_music1.wav')
-pygame.mixer.music.play(-1)  # -1 makes it loop indefinitely
-
 # Set up display
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
