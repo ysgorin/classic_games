@@ -27,8 +27,12 @@ def main():
             run = False
         if menu_result == 'one_player':
             player_symbol = choose_symbol(screen)
-            if player_symbol:
-                one_player_game(screen, player_symbol)
+            if player_symbol in ['X', 'O']:
+                game = one_player_game(screen, player_symbol)
+                if game == None:
+                    run = False
+            elif player_symbol == None:
+                run = False
 
         # Update the display
         pygame.display.update()
