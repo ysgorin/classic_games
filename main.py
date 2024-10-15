@@ -1,10 +1,17 @@
 # main.py
 import pygame
-from menu import show_menu
+from menu import show_menu, choose_symbol
 from game import one_player_game
 
 # Initialize pygame
 pygame.init()
+
+# Initialize the mixer
+# pygame.mixer.init()
+
+# Load and play background music
+# pygame.mixer.music.load('assets/audio/Atmospheric Ambient Hip Hop.wav')
+# pygame.mixer.music.play(-1)  # -1 makes it loop indefinitely
 
 # Set up display
 screen = pygame.display.set_mode((800,600))
@@ -19,7 +26,9 @@ def main():
         if menu_result == 'quit':
             run = False
         if menu_result == 'one_player':
-            one_player_game(screen)
+            player_symbol = choose_symbol(screen)
+            if player_symbol:
+                one_player_game(screen, player_symbol)
 
         # Update the display
         pygame.display.update()

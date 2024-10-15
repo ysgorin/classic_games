@@ -57,22 +57,32 @@ def check_winner(board):
         return board[0][2]
     return None
 
-def cpu_move(board):
+def cpu_move(board, cpu_symbol):
     empty_cells = [(r,c) for r in range(3) for c in range(3) if board[r][c] == '']
     if empty_cells:
         row, col = random.choice(empty_cells)
-        board[row][col] = 'O'
+        board[row][col] = cpu_symbol
 
-def display_message(message):
-    root = tk.Tk()
-    # Hide the main tkinter window
-    root.withdraw()
-    messagebox.showinfo('Game Over', message)
-    root.destroy()
+def display_message(screen, message):
+    # Load background image
+    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
+    
+    # Draw the background image
+    screen.blit(background, (0, 0))
 
-    pygame.time.wait(3000)
+    # Set up the font and render the message
+    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 40)
+    text = font.render(message, True, (255, 255, 255))
+    text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2)) 
+    screen.blit(text, text_rect)
 
-def one_player_game(screen):
+    pygame.display.flip()
+    time.sleep(2)
+
+def one_player_game(screen, player_symbol):
+    cpu_symbol = 'O' if player_symbol == 'X' else 'X'
+
     # Load background image
     background = pygame.image.load('assets/images/ttt_background.png')
     background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
@@ -98,7 +108,7 @@ def one_player_game(screen):
                     row = (mouse_pos[1] - y_offset) // CELL_SIZE
                     col = (mouse_pos[0] - x_offset) // CELL_SIZE
                     if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == '':
-                        board[row][col] = 'X'
+                        board[row][col] = player_symbol
                         draw_board(screen,board,background)
                         pygame.display.update()
                         winner = check_winner(board)
@@ -106,7 +116,7 @@ def one_player_game(screen):
                             game_over = True
                         else:
                             time.sleep(1)
-                            cpu_move(board)
+                            cpu_move(board, cpu_symbol)
                             winner = check_winner(board)
                             if winner:
                                 game_over = True
@@ -116,11 +126,11 @@ def one_player_game(screen):
 
     # Handle game over
     if winner:
-        message = f"Game Over! Winner: {winner}"
+        message = f"Winner: {winner}"
     else:
-        message = "Game Over! It's a draw!"
-
-    display_message(message)
+        message = "Tie Game!"
+    time.sleep(1)
+    display_message(screen, message)
     pygame.display.update()
 
 pygame.quit()

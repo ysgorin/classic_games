@@ -74,3 +74,51 @@ def show_menu(screen):
                         return 'options' # Identifier for options
 
         pygame.display.update()
+
+def choose_symbol(screen):
+    # Load background image
+    background = pygame.image.load('assets/images/ttt_background.png')
+    background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
+    
+    button_font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 40)
+
+    title_text = button_font.render('Choose Your Symbol', True, (255, 255, 255))
+
+    x_button = pygame.Rect(275, 250, 100, 100)
+    o_button = pygame.Rect(425, 250, 100, 100)
+
+    button_color = (0, 128, 255)  # blue
+    hover_color = (173, 216, 230)  # light blue
+
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+
+        x_color = hover_color if x_button.collidepoint(mouse_pos) else button_color
+        o_color = hover_color if o_button.collidepoint(mouse_pos) else button_color
+
+        screen.blit(background, (0, 0))
+        screen.blit(title_text, (screen.get_width() // 2 - title_text.get_width() // 2, 100))
+
+        pygame.draw.rect(screen, x_color, x_button)
+        pygame.draw.rect(screen, o_color, o_button)
+
+        x_text = button_font.render('X', True, (255, 255, 255))
+        o_text = button_font.render('O', True, (255, 255, 255))
+
+        screen.blit(x_text, (x_button.x + (x_button.width - x_text.get_width()) // 2,
+                             x_button.y + (x_button.height - x_text.get_height()) // 2))
+        screen.blit(o_text, (o_button.x + (o_button.width - o_text.get_width()) // 2,
+                             o_button.y + (o_button.height - o_text.get_height()) // 2))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return None
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if x_button.collidepoint(mouse_pos):
+                        return 'X'  # Return the chosen symbol
+                    elif o_button.collidepoint(mouse_pos):
+                        return 'O'  # Return the chosen symbol
+
+        pygame.display.update()
