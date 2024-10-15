@@ -9,7 +9,7 @@ pygame.init()
 pygame.mixer.init()
 
 # Load and play background music
-pygame.mixer.music.load('assets/audio/backgroundmusic1.wav')
+pygame.mixer.music.load('assets/audio/background_music1.wav')
 pygame.mixer.music.play(-1)  # -1 makes it loop indefinitely
 
 # Set up display
