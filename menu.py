@@ -94,3 +94,54 @@ def choose_symbol(screen):
                     return 'O'  # Return the chosen symbol
 
         pygame.display.update()
+
+def two_player_setup(screen):
+    background = pygame.image.load('assets/images/background.png')
+    background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
+
+    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 32)
+
+    input_box1 = pygame.Rect(200, 200, 400, 50)
+    input_box2 = pygame.Rect(200, 300, 400, 50)
+    button_box = pygame.Rect(300, 400, 200, 50)
+
+    player1_name = ''
+    player2_name = ''
+    active_box = None
+
+    while True:
+        screen.blit(background, (0, 0))
+
+        render_centered_text(screen, "Enter Player Names", font, WHITE, pygame.Rect(0, 100, 800, 50))
+        pygame.draw.rect(screen, LIGHT_BLUE if active_box == input_box1 else BLUE, input_box1)
+        pygame.draw.rect(screen, LIGHT_BLUE if active_box == input_box2 else BLUE, input_box2)
+        pygame.draw.rect(screen, BLUE, button_box)
+
+        render_centered_text(screen, player1_name or "Player 1", font, WHITE, input_box1)
+        render_centered_text(screen, player2_name or "Player 2", font, WHITE, input_box2)
+        render_centered_text(screen, "Start Game", font, WHITE, button_box)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return None, None  # Handle quit event
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_box1.collidepoint(event.pos):
+                    active_box = input_box1
+                elif input_box2.collidepoint(event.pos):
+                    active_box = input_box2
+                elif button_box.collidepoint(event.pos):
+                    if player1_name and player2_name:
+                        return player1_name, player2_name  # Return player names
+            if event.type == pygame.KEYDOWN and active_box:
+                if event.key == pygame.K_BACKSPACE:
+                    if active_box == input_box1:
+                        player1_name = player1_name[:-1]
+                    else:
+                        player2_name = player2_name[:-1]
+                elif event.unicode.isalnum():
+                    if active_box == input_box1 and len(player1_name) < 10:
+                        player1_name += event.unicode
+                    elif active_box == input_box2 and len(player2_name) < 10:
+                        player2_name += event.unicode
+
+        pygame.display.update()
