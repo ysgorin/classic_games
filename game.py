@@ -124,7 +124,7 @@ def one_player_game(screen, player_symbol, first_turn):
                         cpu_move(board, cpu_symbol)
                         SOUND_EFFECT.play()
                         winner = check_winner(board)
-                        if winner:
+                        if winner or all(cell != '' for row in board for cell in row):
                             game_over = True
 
         draw_board(screen,board,background)
