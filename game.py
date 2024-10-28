@@ -10,21 +10,32 @@ pygame.init()
 
 # Constants for screen size, grid, and colors
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
-GRID_SIZE = 600  # Size of the grid area (square)
-CELL_SIZE = GRID_SIZE // 3  # Size of each cell (200x200)
+GRID_SIZE = 390  # Size of the grid area (square)
+CELL_SIZE = GRID_SIZE // 3  # Size of each cell (130x130)
 WHITE = (255, 255, 255)
 BLUE = (0, 128, 255)
 
 # Sound Effect
 SOUND_EFFECT = pygame.mixer.Sound('assets/audio/MA_SoundCreator_Pen_Clicks_1.wav')
 
-def draw_board(screen, board, background):
+def draw_board(screen, board, background, turn):
     # Draw the background image
     screen.blit(background, (0, 0))
 
     # Calculate grid offset to center it on the screen
-    x_offset = (SCREEN_WIDTH - GRID_SIZE) // 2
+    x_offset = (SCREEN_WIDTH - GRID_SIZE) * 2 // 3
     y_offset = (SCREEN_HEIGHT - GRID_SIZE) // 2
+
+    # Draw vertical line at 1/3 of the screen width
+    pygame.draw.line(screen, WHITE, (SCREEN_WIDTH // 4, 0), (SCREEN_WIDTH // 4, SCREEN_HEIGHT), 5)
+
+    # Draw text indicating whose turn it is
+    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 16)
+    turn_lines = [f"{turn}'s", "turn"] # pygame doesn't support multiline text
+    turn_texts = [font.render(line, True, WHITE) for line in turn_lines]
+    turn_rects = [text.get_rect(center=(SCREEN_WIDTH // 8, SCREEN_HEIGHT // 4 - 10 + i * 20)) for i, text in enumerate(turn_texts)]
+    for text, rect in zip(turn_texts, turn_rects):
+        screen.blit(text, rect)
 
     # Draw grid lines
     for i in range(1, 3):
@@ -34,7 +45,7 @@ def draw_board(screen, board, background):
                          (x_offset + GRID_SIZE, y_offset + i * CELL_SIZE), 5)
 
     # Draw symbols
-    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 80)
+    font = pygame.font.Font('assets/fonts/PressStart2P-Regular.ttf', 50)
     for row in range(3):
         for col in range(3):
             if board[row][col] != '':
@@ -82,6 +93,7 @@ def display_message(screen, message):
 
 def one_player_game(screen, player_symbol, first_turn):
     cpu_symbol = 'O' if player_symbol == 'X' else 'X'
+    turn = 'Player'
 
     # Load background image
     background = pygame.image.load('assets/images/background.png')
@@ -93,14 +105,14 @@ def one_player_game(screen, player_symbol, first_turn):
     winner = None
 
     # Draw the initial game state
-    draw_board(screen,board,background)
+    draw_board(screen,board,background,turn)
     pygame.display.update()
 
     # If computer goes first, make the initial move
     if first_turn == 'computer':
         cpu_move(board, cpu_symbol)
         SOUND_EFFECT.play()
-        draw_board(screen, board, background)
+        draw_board(screen,board,background,turn)
         pygame.display.update()
 
     while not game_over:
@@ -115,7 +127,7 @@ def one_player_game(screen, player_symbol, first_turn):
                 if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == '':
                     board[row][col] = player_symbol
                     SOUND_EFFECT.play()
-                    draw_board(screen,board,background)
+                    draw_board(screen,board,background,turn)
                     pygame.display.update()
                     
                     winner = check_winner(board)
@@ -129,7 +141,7 @@ def one_player_game(screen, player_symbol, first_turn):
                         if winner or all(cell != '' for row in board for cell in row):
                             game_over = True
 
-        draw_board(screen,board,background)
+        draw_board(screen,board,background,turn)
         pygame.display.update()
 
     # Handle game over
