@@ -1,8 +1,8 @@
 # main.py
 import pygame
 import random
-from menu import show_menu, choose_symbol, two_player_setup
-from game import one_player_game, display_message, two_player_game
+from menu import show_menu, choose_symbol
+from game import one_player_game, display_message
 
 # Initialize pygame and mixer
 pygame.init()
