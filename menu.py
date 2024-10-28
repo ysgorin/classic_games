@@ -2,17 +2,12 @@
 
 # Dependencies
 import pygame
+from utils import render_centered_text
 
 # Color Constants
 WHITE = (255, 255, 255)
 BLUE = (0, 128, 255)
 LIGHT_BLUE = (173, 216, 230)
-
-# Helper function to render centered text
-def render_centered_text(screen, text, font, color, rect):
-    rendered_text = font.render(text, True, color)
-    text_rect = rendered_text.get_rect(center=rect.center)
-    screen.blit(rendered_text, text_rect)
 
 def show_menu(screen):
     # Load background image
