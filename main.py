@@ -23,7 +23,7 @@ def main(): # Main game loop
         menu_result = show_menu(screen)
 
         if menu_result == 'quit':
-            run = False # Handle quit from menu screen
+            run = False
         elif menu_result == 'one_player':
             player_symbol = choose_symbol(screen)
 
